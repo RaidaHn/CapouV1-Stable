@@ -16,6 +16,8 @@
 
 //Your Domain name with URL path or IP address with path
 const char* getServerName = "http://10.82.118.236:8000/bdd/valveState/"; /* serveur PC */
+// const char* getServerName = "http://10.100.1.15:8001/bdd/valveState/"; /* serveur PC */
+
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.

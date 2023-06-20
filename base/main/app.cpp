@@ -179,6 +179,7 @@ void _AppLoRaTask(void*pV){
         }
         else if(mIsBitsSet(app.m_uStatus, ST_VALVE_STATE)){
             if(valveOrderLength == 2){                      /* 2 = close valve order */
+                // PostLoop(NULL, 3);
                 mBitsSet(app.m_uStatus, ST_VALVE_CLOSE);
                 mBitsClr(app.m_uStatus, ST_VALVE_STATE);
                 mBitsSet(app.m_uStatus, ST_LORA_TX_MODE);
@@ -194,10 +195,8 @@ void _AppLoRaTask(void*pV){
                         if(address[k] == 0){                             /* saves address if not saved before                   */
                             delay(100);
                             address[k] = k;                              /* gives last numbers of address                       */
-                            // app.m_uProbeAddress = k;
-                            // sprintf(buf, "%d", k);
-                            app.m_uProbeAddress = 20;
-                            sprintf(buf, "%d", 20);
+                            app.m_uProbeAddress = k;
+                            sprintf(buf, "%d", k);
                             printf("New address (dec): %d\n", k);
                             k = APP_LORA_PROBE_NB+1;                     /* if address saved, then no need to continue          */  
                         }
@@ -258,16 +257,19 @@ void _AppLoRaTask(void*pV){
                 data[u8SzData]='\0';                        /* placing the null character string terminator                     */
                 ESP_LOGI(TAG, "dstAddr: 0x%02X srcAddr: 0x%02X Raw message content: \"%s\"", u8DstAddr, u8SrcAddr, data);   /*  */
 
+                int test;
                 switch (atoi(data)) {
                     case 250:
                         mBitsSet(app.m_uStatus, ST_LORA_MODULE_LINK_ADDRESS);
                         mBitsSet(app.m_uStatus, ST_LORA_TX_MODE);
                         break;
-                    case 2:             /* code to send back, valve_state = open          */
-                        PostLoop(data, 2);
+                    case 2:             /* code to send back valve_state = open           */
+                        delay(100);
+                        PostLoop(NULL, 2);
                         break;
-                    case 3:             /* code to send back, valve_state = closed        */
-                        PostLoop(data, 3);
+                    case 3:             /* code to send back valve_state = closed         */
+                        delay(100);
+                        PostLoop(NULL, 3);
                         break;
                     default:            /* if no code is sent, then data temperature, etc */
                         PostLoop(data, 1);
@@ -314,7 +316,7 @@ void AppInit(void){
 
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
-    Serial.println("\nConnecting to Wi-Fi network");
+    Serial.println("\nConnecting to WiFi network");
     int timeout_counter = 0;
     
     while(WiFi.status() != WL_CONNECTED){
@@ -326,11 +328,11 @@ void AppInit(void){
         }
     }
 
-    Serial.println("\nConnected to the Wi-Fi network");
+    Serial.println("\nConnected to the WiFi network");
     Serial.print("Local ESP32 IP: ");
-    Serial.println(WiFi.localIP());     /* getting IP          */
+    Serial.println(WiFi.localIP()); /* getting IP */
     Serial.print("ESP32 MAC address: ");
-    Serial.println(WiFi.macAddress());  /* getting MAC address */
+    Serial.println(WiFi.macAddress());
     /************************************************************/
 }
 

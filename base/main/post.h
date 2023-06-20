@@ -13,7 +13,7 @@
 #include <HTTPClient.h>
 
 //Your Domain name with URL path or IP address with path
-const char* postServerName = "http://10.82.118.236:8000/bdd/receiveData/"; /* sends temperature, etc */
+const char* postServerName = "http://10.82.118.236:8000/bdd/receiveData/"; /* sends values           */
 const char* postValveState = "http://10.82.118.236:8000/bdd/valveState/";  /* sends back valve state */
 
 
@@ -28,7 +28,7 @@ unsigned long postTimerDelay = 5000;
 void PostLoop(char postData[200], int postCode) {
   //Send an HTTP POST request every 10 minutes
   if ((millis() - postLastTime) > postTimerDelay) {
-    //Check Wi-Fi connection status
+    //Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED){
       WiFiClient client;
       HTTPClient http;
@@ -38,23 +38,24 @@ void PostLoop(char postData[200], int postCode) {
         http.begin(client, postServerName);
       }
       if((postCode == 2)||(postCode == 3)){
+        printf("postCode = %d\n", postCode);
         http.begin(client, postValveState);
       }
 
       /* Header for JSON request */
       http.addHeader("Content-Type", "application/json");      
-
+      
       /* Data to be sent */
       // String jsonData = "{\"node_id\":\"0x1B\",\"longitude\":\"1.313292\",\"latitude\":\"44.031909\",\"internal_humidity\":\"15\",\"external_humidity\":\"37\",\"internal_temperature\":\"27\",\"external_temperature\":\"33\"}"; /* example to send values */
       // String jsonData = "{\"node_id\": \"0x21\", \"valve_state\": \"on\"}"; /* example to send valve state */
-      if(postCode == 1){  /* if code = 1, then send back the content of data */
+      if(postCode == 1){
         jsonData = postData;  /* to send data received from probe */
         // String jsonData = "{\"node_id\":\"0x1B\",\"longitude\":\"1.313292\",\"latitude\":\"44.031909\",\"internal_humidity\":\"15\",\"external_humidity\":\"37\",\"internal_temperature\":\"27\",\"external_temperature\":\"33\"}"; /* example to send values */
       }
-      else if(postCode == 2){ /* if code = 2, then send back valve = open        */
+      else if(postCode == 2){
         jsonData = "{\"node_id\": \"0x21\", \"valve_state\": \"on\"}";
       }
-      else if(postCode == 3){ /* if code = 3, then send back valve = closed      */
+      else if(postCode == 3){
         jsonData = "{\"node_id\": \"0x21\", \"valve_state\": \"off\"}";
       }
      
@@ -67,7 +68,7 @@ void PostLoop(char postData[200], int postCode) {
       http.end();
     }
     else {
-      Serial.println("Wi-Fi Disconnected");
+      Serial.println("WiFi Disconnected");
     }
     postLastTime = millis();
   }

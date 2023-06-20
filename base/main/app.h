@@ -16,7 +16,7 @@ extern "C" {
 /*********** Application parameters *********************************************/
 #define APP_FLASH_LED_PIN               ((gpio_num_t)(4))
 #define APP_SENDING_INTERVAL_VALVE      (6333)
-#define APP_SENDING_INTERVAL_DATA       (15000)
+#define APP_SENDING_INTERVAL_DATA       (30000)
 #define APP_SENDING_MESSAGE_STR         ("LoRa Base Station")
 #define APP_TAG_STR                     ("[$BASE-APP$]:")
 
@@ -37,7 +37,7 @@ extern "C" {
 
 /*********** WiFi parameters ****************************************************/
 #define APP_WIFI_SSID                       ("WF-DMZ")
-#define APP_WIFI_PASSWORD                   ("WF-DMZ2023@)
+#define APP_WIFI_PASSWORD                   ("WF-DMZ2023@")
 #define APP_WIFI_CONNECTION_TIMEOUT         (10)    /* time before reconnection */
 /********************************************************************************/
 
